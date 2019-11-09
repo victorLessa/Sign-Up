@@ -139,7 +139,7 @@ class UserController {
       const currente_time = this.moment(new Date()).tz('America/Sao_Paulo')
       let time_difference = currente_time - last_login
 
-      if (time_difference / 60000 > 30)
+      if (time_difference / 60000 < 30)
         return res.status(401).send({ message: 'Sessão inválida', status: 401 })
 
       res.send(user)
