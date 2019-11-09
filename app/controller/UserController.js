@@ -5,6 +5,9 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
 class UserController {
+  constructor(moment) {
+    this.moment = moment
+  }
   async generateToken(user_id) {
     const token = jwt.sign({ id: user_id }, process.env.SECRET, {
       expiresIn: process.env.EXPIRES_IN,
@@ -74,22 +77,75 @@ class UserController {
       return next(err)
     }
   }
-  async authenticate(req, res) {
-    let { email, password } = req.body
+  async authenticate(req, res, next) {
+    try {
+      let { email, senha } = req.body
 
-    let user = await User.findOne({ where: { email } })
+      let user = await User.findOne({
+        where: { email },
+        attributes: [
+          'id',
+          'senha',
+          ['created_at', 'data_criacao'],
+          ['updated_at', 'data_atualizacao'],
+          'ultimo_login',
+        ],
+      })
 
-    if (!user) {
-      return res.status(400).send({ message: 'Usuário e/ou senha inválidos' })
+      if (!user) {
+        return res.status(401).send({ message: 'Usuário e/ou senha inválidos' })
+      }
+
+      if (!(await bcrypt.compare(senha, user.senha))) {
+        return res.status(401).send({ message: 'Usuário e/ou senha inválidos' })
+      }
+
+      const token = await this.generateToken(user.id)
+
+      await User.update(
+        { ultimo_login: new Date() },
+        { where: { id: user.id } }
+      )
+      delete user.dataValues.senha
+
+      user.dataValues.token = token
+
+      res.send(user)
+    } catch (err) {
+      next(err)
     }
+  }
 
-    if (!(await bcrypt.compare(password, user.password))) {
-      return res.status(401).send({ message: 'Usuário e/ou senha inválidos' })
+  async getUser(req, res, next) {
+    try {
+      const { id } = req.params
+      const user_id = req.user_id
+      if (parseInt(id) !== parseInt(user_id))
+        return res.status(401).send({ message: 'Não autorizado', status: 401 })
+      const user = await User.findOne({
+        where: { id },
+        attributes: [
+          'id',
+          'nome',
+          'email',
+          ['created_at', 'data_criacao'],
+          ['updated_at', 'data_atualizacao'],
+          'ultimo_login',
+        ],
+      })
+      const last_login = this.moment(user.dataValues.ultimo_login).tz(
+        'America/Sao_Paulo'
+      )
+      const currente_time = this.moment(new Date()).tz('America/Sao_Paulo')
+      let time_difference = currente_time - last_login
+
+      if (time_difference / 60000 > 30)
+        return res.status(401).send({ message: 'Sessão inválida', status: 401 })
+
+      res.send(user)
+    } catch (err) {
+      next(err)
     }
-
-    const token = await this.generateToken(user.id)
-    console.log(user)
-    res.send({ user, token })
   }
 }
 
