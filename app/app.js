@@ -1,8 +1,8 @@
 const express = require('express')
 const cors = require('cors')
 const routes = require('./routes')
-const authAutenticate = require('./middleware/auth-middleware')
-const errorHandler = require('./middleware/errorHandler-middleware')
+const authAutenticate = require('./middleware/auth_middleware')
+const errorHandler = require('./middleware/errorHandler_middleware')
 
 class App {
   constructor() {
