@@ -5,15 +5,17 @@ const authenticate = (req, res, next) => {
 
   const authHeader = req.headers.authorization
 
-  if (!authHeader) return res.status(401).send({ error: 'No token provided' })
+  if (!authHeader)
+    return res.status(401).send({ message: 'Não autorizado', status: 401 })
 
   const parts = authHeader.split(' ')
-  if (!parts.length === 2) return res.status(401).send({ error: 'Token error' })
+  if (!parts.length === 2)
+    return res.status(401).send({ message: 'Não autorizado', status: 401 })
 
   const [scheme, token] = parts
 
   if (!scheme.match(/^Bearer$/))
-    return res.status(401).send({ error: 'Token malformatted' })
+    return res.status(401).send({ message: 'Não autorizado', status: 401 })
 
   jwt.verify(token, process.env.SECRET, (err, decoded) => {
     if (err) return res.status(401).send({ error: 'Token invalid' })
