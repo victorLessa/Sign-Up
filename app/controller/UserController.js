@@ -1,18 +1,13 @@
 'user strict'
 const { sequelize, User, Phone } = require('../models/index')
 require('dotenv').config()
-const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
 
-class UserController {
+const Authenticate = require('../lib/authenticate')
+
+class UserController extends Authenticate {
   constructor(moment) {
+    super()
     this.moment = moment
-  }
-  async generateToken(user_id) {
-    const token = jwt.sign({ id: user_id }, process.env.SECRET, {
-      expiresIn: process.env.EXPIRES_IN,
-    })
-    return token
   }
   async store(req, res, next) {
     try {
@@ -23,10 +18,12 @@ class UserController {
       })
 
       if (user) {
-        return res.status(401).send({ message: 'E-mail já existente' })
+        return res
+          .status(401)
+          .send({ message: 'E-mail já existente', status: 401 })
       }
 
-      senha = await bcrypt.hash(senha, 10)
+      senha = await this.hashPassword(senha)
 
       user = await sequelize.transaction().then(t => {
         return User.create(
@@ -93,11 +90,15 @@ class UserController {
       })
 
       if (!user) {
-        return res.status(401).send({ message: 'Usuário e/ou senha inválidos' })
+        return res
+          .status(401)
+          .send({ message: 'Usuário e/ou senha inválidos', status: 401 })
       }
 
-      if (!(await bcrypt.compare(senha, user.senha))) {
-        return res.status(401).send({ message: 'Usuário e/ou senha inválidos' })
+      if (!(await this.hashCompare(senha, user.senha))) {
+        return res
+          .status(401)
+          .send({ message: 'Usuário e/ou senha inválidos', status: 401 })
       }
 
       const token = await this.generateToken(user.id)
@@ -115,13 +116,23 @@ class UserController {
       next(err)
     }
   }
-
+  async timeDifference(user) {
+    const last_login = this.moment(user.dataValues.ultimo_login).tz(
+      'America/Sao_Paulo'
+    )
+    const currente_time = this.moment(new Date()).tz('America/Sao_Paulo')
+    let time_difference = currente_time - last_login
+    return time_difference / 60000
+  }
   async getUser(req, res, next) {
     try {
-      const { id } = req.params
+      const { user_id: id } = req.params
+
       const user_id = req.user_id
+
       if (parseInt(id) !== parseInt(user_id))
         return res.status(401).send({ message: 'Não autorizado', status: 401 })
+
       const user = await User.findOne({
         where: { id },
         attributes: [
@@ -133,13 +144,8 @@ class UserController {
           'ultimo_login',
         ],
       })
-      const last_login = this.moment(user.dataValues.ultimo_login).tz(
-        'America/Sao_Paulo'
-      )
-      const currente_time = this.moment(new Date()).tz('America/Sao_Paulo')
-      let time_difference = currente_time - last_login
 
-      if (time_difference / 60000 < 30)
+      if ((await this.timeDifference(user)) > 30)
         return res.status(401).send({ message: 'Sessão inválida', status: 401 })
 
       res.send(user)
