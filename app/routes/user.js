@@ -12,7 +12,7 @@ router.post('/signIn', sign_in_validate, (req, res, next) =>
   UserController.authenticate(req, res, next)
 )
 
-router.get('/user/:id', (req, res, next) => {
+router.get('/user/:user_id', (req, res, next) => {
   UserController.getUser(req, res, next)
 })
 
