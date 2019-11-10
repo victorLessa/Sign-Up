@@ -18,7 +18,8 @@ const authenticate = (req, res, next) => {
     return res.status(401).send({ message: 'Não autorizado', status: 401 })
 
   jwt.verify(token, process.env.SECRET, (err, decoded) => {
-    if (err) return res.status(401).send({ message: 'Não autorizado' })
+    if (err)
+      return res.status(401).send({ message: 'Não autorizado', status: 401 })
     req.user_id = decoded.id
 
     return next()
