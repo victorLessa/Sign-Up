@@ -1,21 +1,23 @@
 'user strict'
-const { sequelize, User, Phone } = require('../models/index')
 require('dotenv').config()
+const { sequelize, User, Phone } = require('../models/index')
+const UserService = require('../services/UserService')
+const {
+  generateToken,
+  hashCompare,
+  hashPassword,
+} = require('../lib/authenticate')
 
-const Authenticate = require('../lib/authenticate')
-
-class UserController extends Authenticate {
+class UserController extends UserService {
   constructor(moment) {
-    super()
+    super(sequelize, User, Phone)
     this.moment = moment
   }
   async store(req, res, next) {
     try {
       let { nome, email, senha, telefones } = req.body
 
-      let user = await User.findOne({
-        where: { email },
-      })
+      let user = await this.findUserByEmail({ email })
 
       if (user) {
         return res
@@ -23,49 +25,9 @@ class UserController extends Authenticate {
           .send({ message: 'E-mail já existente', status: 401 })
       }
 
-      senha = await this.hashPassword(senha)
+      user = await this.transactionUserCreate({ nome, email, senha, telefones })
 
-      user = await sequelize.transaction().then(t => {
-        return User.create(
-          {
-            nome,
-            email,
-            senha,
-            ultimo_login: new Date(),
-          },
-          { transaction: t }
-        )
-          .then(user => {
-            for (let statement of telefones) {
-              return Phone.create(
-                {
-                  user_id: user.id,
-                  numero: statement.numero,
-                  ddd: statement.ddd,
-                },
-                { transaction: t }
-              )
-            }
-          })
-          .then(async () => {
-            await t.commit()
-            return await User.findOne({
-              where: { email },
-              attributes: [
-                'id',
-                ['created_at', 'data_criacao'],
-                ['updated_at', 'data_atualizacao'],
-                'ultimo_login',
-              ],
-            })
-          })
-          .catch(err => {
-            t.rollback()
-            throw new Error(err)
-          })
-      })
-
-      const token = await this.generateToken(user.id)
+      const token = await generateToken(user.id)
 
       user.dataValues.token = token
 
@@ -78,16 +40,7 @@ class UserController extends Authenticate {
     try {
       let { email, senha } = req.body
 
-      let user = await User.findOne({
-        where: { email },
-        attributes: [
-          'id',
-          'senha',
-          ['created_at', 'data_criacao'],
-          ['updated_at', 'data_atualizacao'],
-          'ultimo_login',
-        ],
-      })
+      let user = await this.findUserByEmail({ email })
 
       if (!user) {
         return res
@@ -95,13 +48,13 @@ class UserController extends Authenticate {
           .send({ message: 'Usuário e/ou senha inválidos', status: 401 })
       }
 
-      if (!(await this.hashCompare(senha, user.senha))) {
+      if (!(await hashCompare(senha, user.senha))) {
         return res
           .status(401)
           .send({ message: 'Usuário e/ou senha inválidos', status: 401 })
       }
 
-      const token = await this.generateToken(user.id)
+      const token = await generateToken(user.id)
 
       await User.update(
         { ultimo_login: new Date() },
@@ -129,21 +82,13 @@ class UserController extends Authenticate {
       const { user_id: id } = req.params
 
       const user_id = req.user_id
-
       if (parseInt(id) !== parseInt(user_id))
         return res.status(401).send({ message: 'Não autorizado', status: 401 })
 
-      const user = await User.findOne({
-        where: { id },
-        attributes: [
-          'id',
-          'nome',
-          'email',
-          ['created_at', 'data_criacao'],
-          ['updated_at', 'data_atualizacao'],
-          'ultimo_login',
-        ],
-      })
+      const user = await this.findUserById({ id })
+
+      if (!user)
+        return res.status(404).send({ message: 'User not found', status: 404 })
 
       if ((await this.timeDifference(user)) > 30)
         return res.status(401).send({ message: 'Sessão inválida', status: 401 })
