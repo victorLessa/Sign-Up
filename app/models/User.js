@@ -15,5 +15,8 @@ module.exports = (sequelize, DataTypes) => {
   User.associate = models => {
     User.hasMany(models.Phone, { foreignKey: 'user_id', as: 'phones' })
   }
+  User.beforeCreate(async (user, options) => {
+    return (user.senha = await bcrypt.hash(user.senha, 10))
+  })
   return User
 }
