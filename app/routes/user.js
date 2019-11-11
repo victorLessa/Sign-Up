@@ -1,8 +1,7 @@
 const express = require('express')
 const router = express.Router()
-const moment = require('moment-timezone')
 let UserController = require('../controller/UserController')
-UserController = new UserController(moment)
+UserController = new UserController()
 const { sign_up_validate, sign_in_validate } = require('../validation/index')
 
 router.post('/signUp', sign_up_validate, (req, res, next) =>

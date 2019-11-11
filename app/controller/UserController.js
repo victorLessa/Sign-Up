@@ -7,10 +7,11 @@ const {
   hashCompare,
   hashPassword,
 } = require('../lib/authenticate')
+const { timeDifference, timeZone } = require('../utils/moment')
 
 class UserController extends UserService {
-  constructor(moment) {
-    super(sequelize, User, Phone, moment)
+  constructor() {
+    super(sequelize, User, Phone)
   }
   async store(req, res, next) {
     try {
@@ -30,7 +31,7 @@ class UserController extends UserService {
 
       user.dataValues.token = token
 
-      user.dataValues.ultimo_login = await this.timeZone(
+      user.dataValues.ultimo_login = await timeZone(
         user.dataValues.ultimo_login
       )
 
@@ -65,7 +66,7 @@ class UserController extends UserService {
       )
       delete user.dataValues.senha
 
-      user.dataValues.ultimo_login = await this.timeZone(
+      user.dataValues.ultimo_login = await timeZone(
         user.dataValues.ultimo_login
       )
 
@@ -90,10 +91,10 @@ class UserController extends UserService {
       if (!user)
         return res.status(404).send({ message: 'User not found', status: 404 })
 
-      if ((await this.timeDifference(user)) > 30)
+      if ((await timeDifference(user)) > 30)
         return res.status(401).send({ message: 'Sessão inválida', status: 401 })
 
-      user.dataValues.ultimo_login = await this.timeZone(
+      user.dataValues.ultimo_login = await timeZone(
         user.dataValues.ultimo_login
       )
 
