@@ -134,7 +134,7 @@ describe('Tests Users', () => {
     chai
       .request(server)
       .get(`/api/user/${user_id}`)
-      .set('authorization', 'Bearer TesteTokenError')
+      .set('authentication', 'Bearer TesteTokenError')
       .end((err, res) => {
         if (err) return done(err)
         res.should.have.status(401)
