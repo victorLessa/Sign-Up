@@ -82,7 +82,10 @@ class UserController extends UserService {
 
       const user_id = req.user_id
       if (parseInt(id) !== parseInt(user_id))
-        return res.status(401).send({ message: 'Não autorizado', status: 401 })
+        return res.status(401).send({
+          message: 'Id passado no path não bate com o id do token',
+          status: 401,
+        })
 
       const user = await this.findUserById({ id })
 
