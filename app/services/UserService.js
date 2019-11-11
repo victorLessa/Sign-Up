@@ -60,8 +60,8 @@ class UserService {
     })
   }
   async findUserById({ id }) {
-    let user = await this.user.findOne({
-      where: { id },
+    let user = await this.user.findByPk(id, {
+      include: { association: 'phones' },
       attributes: [
         'id',
         'nome',
