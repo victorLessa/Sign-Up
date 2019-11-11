@@ -62,7 +62,8 @@ router.post('/signUp', sign_up_validate, (req, res, next) =>
   "data_criacao": "2019-11-11T21:44:49.871Z",
   "data_atualizacao": "2019-11-11T21:44:49.871Z",
   "ultimo_login": "11 de Novembro de 2019 às 18:44",
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNTczNTA4NjkwLCJleHAiOjE1NzM1MTczMzB9.AW1tlb6xxIllTHdx9zDrWdfN_ow9mTjlspSSdZvCjvE"
+  "token":
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNTczNTA4NjkwLCJleHAiOjE1NzM1MTczMzB9.AW1tlb6xxIllTHdx9zDrWdfN_ow9mTjlspSSdZvCjvE"
 }
 ```
 
