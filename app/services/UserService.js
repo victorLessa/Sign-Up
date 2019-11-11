@@ -31,14 +31,16 @@ class UserService {
         )
         .then(async user => {
           for (let statement of telefones) {
-            await this.phone.create(
-              {
-                user_id: user.id,
-                numero: statement.numero,
-                ddd: statement.ddd,
-              },
-              { transaction: t }
-            )
+            if (statement) {
+              await this.phone.create(
+                {
+                  user_id: user.id,
+                  numero: statement.numero,
+                  ddd: statement.ddd,
+                },
+                { transaction: t }
+              )
+            }
           }
         })
         .then(async () => {
