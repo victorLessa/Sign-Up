@@ -1,8 +1,9 @@
 class UserService {
-  constructor(sequelize, User, Phone) {
+  constructor(sequelize, User, Phone, moment) {
     this.sequelize = sequelize
     this.user = User
     this.phone = Phone
+    this.moment = moment
   }
   async findUserByEmail({ email }) {
     let user = await this.user.findOne({
@@ -72,6 +73,14 @@ class UserService {
       ],
     })
     return user
+  }
+  async timeDifference(user) {
+    const last_login = this.moment(user.dataValues.ultimo_login).tz(
+      'America/Sao_Paulo'
+    )
+    const currente_time = this.moment(new Date()).tz('America/Sao_Paulo')
+    let time_difference = currente_time - last_login
+    return time_difference / 60000
   }
 }
 

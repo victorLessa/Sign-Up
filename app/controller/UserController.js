@@ -10,8 +10,7 @@ const {
 
 class UserController extends UserService {
   constructor(moment) {
-    super(sequelize, User, Phone)
-    this.moment = moment
+    super(sequelize, User, Phone, moment)
   }
   async store(req, res, next) {
     try {
@@ -69,14 +68,7 @@ class UserController extends UserService {
       next(err)
     }
   }
-  async timeDifference(user) {
-    const last_login = this.moment(user.dataValues.ultimo_login).tz(
-      'America/Sao_Paulo'
-    )
-    const currente_time = this.moment(new Date()).tz('America/Sao_Paulo')
-    let time_difference = currente_time - last_login
-    return time_difference / 60000
-  }
+
   async getUser(req, res, next) {
     try {
       const { user_id: id } = req.params
