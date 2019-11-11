@@ -46,11 +46,11 @@ router.post('/signUp', sign_up_validate, (req, res, next) =>
       "email": "concrete@gmail.com",
       "senha": "123",
       "telefones":[
-        {
-          "numero": "965844936",
-		 "ddd": "21"
-        }
-	]
+            {
+              "numero": "965844936",
+             "ddd": "21"
+            }
+      ]
 }
 ```
 
