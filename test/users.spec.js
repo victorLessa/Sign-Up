@@ -106,7 +106,7 @@ describe('Tests Users', () => {
     chai
       .request(server)
       .get(`/api/user/${user_id}`)
-      .set('authorization', `Bearer ${token}`)
+      .set('authentication', `Bearer ${token}`)
       .end((err, res) => {
         if (err) return done(err)
         res.should.have.status(200)

@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken')
 const authenticate = (req, res, next) => {
   if (req.path === '/api/signUp' || req.path === '/api/signIn') return next()
 
-  const authHeader = req.headers.Authentication
+  const authHeader = req.headers.authentication
 
   if (!authHeader)
     return res.status(401).send({ message: 'Não autorizado', status: 401 })
