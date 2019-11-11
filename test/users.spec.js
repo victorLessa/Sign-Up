@@ -11,7 +11,7 @@ describe('Tests Users', () => {
   it('Register sucess', done => {
     const body = {
       nome: 'Victor Camara Lessa',
-      email: 'victordsgnr@gmail.com',
+      email: 'anonimoteste@gmail.com',
       senha: '123',
       telefones: [
         {
@@ -40,7 +40,7 @@ describe('Tests Users', () => {
   it('Register with validation error', done => {
     const body = {
       nome: null,
-      email: 'victordsgnr@gmail.com',
+      email: 'anonimoteste@gmail.com',
       senha: '123',
       telefones: [
         {
@@ -64,7 +64,7 @@ describe('Tests Users', () => {
   })
   it('If the email does not exist, return error with appropriate status plus "Invalid username and / or password" message', done => {
     const body = {
-      email: 'victorcamara16@gmail.com',
+      email: 'anonimotestes@gmail.com',
       senha: '111',
     }
 
@@ -84,7 +84,7 @@ describe('Tests Users', () => {
   })
   it('If the email exists but the password does not match, return the appropriate status 401 plus the message "Invalid username and / or password', done => {
     const body = {
-      email: 'victordsgnr@gmail.com',
+      email: 'anonimoteste@gmail.com',
       senha: '122',
     }
 
