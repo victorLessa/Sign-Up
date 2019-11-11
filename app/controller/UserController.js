@@ -66,9 +66,7 @@ class UserController extends UserService {
       )
       delete user.dataValues.senha
 
-      user.dataValues.ultimo_login = await timeZone(
-        user.dataValues.ultimo_login
-      )
+      user.dataValues.ultimo_login = await timeZone(new Date())
 
       user.dataValues.token = token
 
