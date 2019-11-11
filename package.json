@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "prestart": "yarn sequelize db:migrate",
     "start": "pm2-runtime start ecosystem.config.js --env production",
     "predev": "yarn sequelize db:migrate",
     "dev": "nodemon app/serve",
