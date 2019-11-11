@@ -30,7 +30,7 @@ yarn test
 
 ### Route POST -> api/signUp
 
-* Register users
+- Register users
 
 ```js
 router.post('/signUp', sign_up_validate, (req, res, next) =>
@@ -38,23 +38,23 @@ router.post('/signUp', sign_up_validate, (req, res, next) =>
 )
 ```
 
-* Requisition body
+- Requisition body
 
 ```json
 {
-      "nome": "Concrete",
-      "email": "concrete@gmail.com",
-      "senha": "123",
-      "telefones":[
-            {
-              "numero": "965844936",
-             "ddd": "21"
-            }
-      ]
+  "nome": "Concrete",
+  "email": "concrete@gmail.com",
+  "senha": "123",
+  "telefones": [
+    {
+      "numero": "965844936",
+      "ddd": "21"
+    }
+  ]
 }
 ```
 
-* Return example
+- Return example
 
 ```json
 {
@@ -62,17 +62,15 @@ router.post('/signUp', sign_up_validate, (req, res, next) =>
   "data_criacao": "2019-11-11T21:44:49.871Z",
   "data_atualizacao": "2019-11-11T21:44:49.871Z",
   "ultimo_login": "11 de Novembro de 2019 às 18:44",
-  "token": 			     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNTczNTA4NjkwLCJleHAiOjE1NzM1MTczMzB9.AW1tlb6xxIllTHdx9zDrWdfN_ow9mTjlspSSdZvCjvE"
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNTczNTA4NjkwLCJleHAiOjE1NzM1MTczMzB9.AW1tlb6xxIllTHdx9zDrWdfN_ow9mTjlspSSdZvCjvE"
 }
 ```
-
-
 
 ## Sign In
 
 ### Route POST -> api/signIn
 
-* User access
+- User access
 
 ```js
 router.post('/signIn', sign_in_validate, (req, res, next) =>
@@ -80,7 +78,7 @@ router.post('/signIn', sign_in_validate, (req, res, next) =>
 )
 ```
 
-* Requisition body
+- Requisition body
 
 ```js
 {
@@ -89,7 +87,7 @@ router.post('/signIn', sign_in_validate, (req, res, next) =>
 }
 ```
 
-* Return example
+- Return example
 
 ```json
 {
@@ -105,7 +103,7 @@ router.post('/signIn', sign_in_validate, (req, res, next) =>
 
 ### route GET api/user/:id
 
-* Search for user
+- Search for user
 
 ```js
 router.get('/user/:user_id', (req, res, next) => {
@@ -113,7 +111,7 @@ router.get('/user/:user_id', (req, res, next) => {
 })
 ```
 
-* Return example
+- Return example
 
 ```json
 {
@@ -124,10 +122,9 @@ router.get('/user/:user_id', (req, res, next) => {
   "data_atualizacao": "2019-11-11T21:37:13.440Z",
   "ultimo_login": "11 de Novembro de 2019 às 18:37"
 }
-or if you are more than 20 minutes logged in
+or if you are more than 30 minutes logged in
 {
   "message": "Sessão inválida",
   "status": 401
 }
 ```
-
