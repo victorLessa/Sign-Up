@@ -1,6 +1,6 @@
 const moment = require('moment-timezone')
 const timeZone = async () => {
-  this.moment.locale('pt-br')
+  moment.locale('pt-br')
   return await moment(date)
     .tz('America/Sao_Paulo')
     .format('LLL')
