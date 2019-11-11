@@ -82,6 +82,12 @@ class UserService {
     let time_difference = currente_time - last_login
     return time_difference / 60000
   }
+  async timeZone(date) {
+    this.moment.locale('pt-br')
+    return await this.moment(date)
+      .tz('America/Sao_Paulo')
+      .format('LLL')
+  }
 }
 
 module.exports = UserService

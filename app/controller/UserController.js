@@ -30,6 +30,10 @@ class UserController extends UserService {
 
       user.dataValues.token = token
 
+      user.dataValues.ultimo_login = await this.timeZone(
+        user.dataValues.ultimo_login
+      )
+
       return res.send(user.dataValues)
     } catch (err) {
       return next(err)
@@ -61,6 +65,10 @@ class UserController extends UserService {
       )
       delete user.dataValues.senha
 
+      user.dataValues.ultimo_login = await this.timeZone(
+        user.dataValues.ultimo_login
+      )
+
       user.dataValues.token = token
 
       res.send(user)
@@ -84,6 +92,10 @@ class UserController extends UserService {
 
       if ((await this.timeDifference(user)) > 30)
         return res.status(401).send({ message: 'Sessão inválida', status: 401 })
+
+      user.dataValues.ultimo_login = await this.timeZone(
+        user.dataValues.ultimo_login
+      )
 
       res.send(user)
     } catch (err) {
