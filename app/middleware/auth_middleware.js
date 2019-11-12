@@ -5,7 +5,12 @@ const response = res => {
 }
 
 const authenticate = (req, res, next) => {
-  if (req.path === '/api/signUp' || req.path === '/api/signIn') return next()
+  if (
+    req.path === '/api/signUp' ||
+    req.path === '/api/signIn' ||
+    req.path === '/api'
+  )
+    return next()
 
   const authHeader = req.headers.authentication
 
