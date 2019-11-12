@@ -1,5 +1,11 @@
 # Concrete Solution
 
+## Descriptions
+
+- Potgers database is hosted at ElephantSQL
+- Using ORM sequelize to create and make database queries
+- Using pm2 to start the server on heroku
+
 ## Setup
 
 ### To install dependences
