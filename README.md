@@ -8,8 +8,8 @@
 
 ## ✋🏻 Prerequisites
 
-Node.js
-Yarn
+- Node.js
+- Yarn
 
 ## Setup
 
