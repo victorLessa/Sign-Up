@@ -6,6 +6,11 @@
 - Using ORM sequelize to create and make database queries
 - Using pm2 to start the server on heroku
 
+## ✋🏻 Prerequisites
+
+Node.js
+Yarn
+
 ## Setup
 
 ### To install dependences
